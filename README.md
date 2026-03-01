@@ -35,23 +35,24 @@ And run:
 
 ## Debugging
 
-Use this command to find list of IIO devices:
+Use this command to get list of IIO devices:
 
 ```console
 grep -R . /sys/bus/iio/devices/iio:device*/name
 ```
 
-and this command to watch the value of the accelerometer (replacing ``iio:device3/in_accel_x_raw`` if needed):
+Use this command to watch the value of the accelerometer (replacing ``iio:device3/in_accel_x_raw`` if needed):
 
 ```console
 watch -n 0.05 cat /sys/bus/iio/devices/iio:device3/in_accel_x_raw
 ```
 
-These settings can be tuned in ``main.cpp``, in the future I may make these as input parameters:
+These settings can be tuned in ``main.cpp``, in the future I may make these input parameters:
 
 ```cpp
 // tune these
-double threshold = 2000.0;
+double threshold = 400.0;
 double upper_bound = 1000000.0;
-std::chrono::milliseconds cooldown(100);
+std::chrono::milliseconds listening_time(700);
+std::chrono::milliseconds sleep_time(200);
 ```
