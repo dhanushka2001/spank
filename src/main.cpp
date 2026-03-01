@@ -11,6 +11,35 @@
 #include "miniaudio.hpp"
 
 using Clock = std::chrono::steady_clock;
+namespace fs = std::filesystem;
+
+std::string findAccelerometer()
+{
+    const std::string basePath = "/sys/bus/iio/devices/";
+
+    for (const auto& entry : fs::directory_iterator(basePath)) {
+        if (!entry.is_directory())
+            continue;
+
+        std::string dirName = entry.path().filename().string();
+
+        if (dirName.rfind("iio:device", 0) != 0)
+            continue;
+
+        std::ifstream nameFile(entry.path() / "name");
+        if (!nameFile.is_open())
+            continue;
+
+        std::string deviceName;
+        std::getline(nameFile, deviceName);
+
+        if (deviceName == "accel_3d") {
+            return entry.path().string() + "/";
+        }
+    }
+
+    return "";
+}
 
 void playSound(const char* file)
 {
@@ -48,31 +77,36 @@ double read_value(const std::string& path)
 
 int main(int argc, char** argv)
 {
-    // const std::string base = "/sys/bus/iio/devices/iio:device0/";
-    const std::string base = "/sys/bus/iio/devices/iio:device3/";
-    // const std::string base = "/sys/bus/iio/devices/iio:device6/";
-    
+    // find location of name:accel_3d
+    std::string base = findAccelerometer();
+
+    if (base.empty()) {
+        std::cerr << "No accel_3d device found!\n";
+        return 1;
+    }
+
+    std::cout << "Using accelerometer: " << base << "\n";
+
     // const std::string x_path = base + "in_incli_x_raw";
     const std::string x_path = base + "in_accel_x_raw";
     const std::string y_path = base + "in_accel_y_raw";
     const std::string z_path = base + "in_accel_z_raw";
 
     // tune these
-    double threshold = 2000.0;
+    double threshold = 400.0;
     double upper_bound = 1000000.0;
-    std::chrono::milliseconds cooldown(100);
+    std::chrono::milliseconds listening_time(700);
+    std::chrono::milliseconds sleep_time(200);
 
     std::random_device rd; // obtain a random number from hardware
     std::mt19937 gen(rd()); // seed the generator
     std::uniform_int_distribution<> distr(0, 59); // define the range
     
-    namespace fs = std::filesystem;
-
     double lastMagnitude = 0.0;
     int slapCounter = 0;
-    auto lastTriggerTime = Clock::now() - cooldown;
+    auto lastTriggerTime = Clock::now() - listening_time;
 
-    std::cout << "Listening for slaps... (threshold=" << threshold << ", cooldown=" << cooldown << ")\n";
+    std::cout << "Listening for slaps... (threshold=" << threshold << ", listening_time=" << listening_time << ")\n";
 
     while (true)
     {
@@ -82,8 +116,8 @@ int main(int argc, char** argv)
             double y = read_value(y_path);
             double z = read_value(z_path);
 
-            double magnitude = std::sqrt(x*x + y*y + z*z);
-            // double magnitude = x > 0 ? x : -x;
+            //double magnitude = std::sqrt(x*x + y*y + z*z);
+            double magnitude = x > 0 ? x : -x;
             // double y_mag = y > 0 ? y : -y;
             // double magnitude = std::sqrt(y*y);
             double delta = magnitude - lastMagnitude;
@@ -91,11 +125,12 @@ int main(int argc, char** argv)
 
             auto now = Clock::now();
 
+            // Uncomment to see continuous delta (WARNING: terminal spam)
             // std::cout << "delta=" << delta << "\n";
             
             if (delta > threshold &&
                 delta < upper_bound &&
-                now - lastTriggerTime > cooldown)
+                now - lastTriggerTime > listening_time)
             {
                 slapCounter++;
                 
@@ -119,6 +154,7 @@ int main(int argc, char** argv)
             std::cerr << e.what() << "\n";
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        // IMPORTANT
+        std::this_thread::sleep_for(sleep_time);
     }
 }
