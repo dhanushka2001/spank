@@ -8,7 +8,7 @@
 #include <format>
 #include <filesystem>
 #include <string>
-#include "miniaudio.h"
+#include "miniaudio.hpp"
 
 using Clock = std::chrono::steady_clock;
 
