@@ -1,4 +1,4 @@
-# spank-linux
+# spank
 
 Slap your Linux laptop, it yells back.
 
@@ -16,11 +16,11 @@ Uses the laptop's accelerometer via the Linux IIO (Industrial I/O) subsystem to 
 ## Install
 
 ```console
-git clone https://github.com/dhanushka2001/spank-linux
+git clone https://github.com/dhanushka2001/spank
 ```
 
 ```console
-cd spank-linux
+cd spank
 mkdir build
 cd build
 cmake .. -G Ninja
@@ -37,7 +37,7 @@ And run:
 
 **Pain mode**: Randomly plays from 10 pain/protest audio clips when a slap is detected.
 
-**Sexy mode**: Randomly plays NSFW moaning sounds (not my idea don't sue me).
+**Sexy mode**: Randomly plays NSFW moaning sounds (legacy feature, not my idea don't sue me).
 
 **Halo mode**: Randomly plays from death sound effects from the Halo video game series when a slap is detected.
 
