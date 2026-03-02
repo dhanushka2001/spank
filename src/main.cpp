@@ -93,7 +93,7 @@ int main(int argc, char** argv)
     const std::string z_path = base + "in_accel_z_raw";
 
     // tune these
-    double threshold = 400.0;
+    double threshold = 500.0;
     double upper_bound = 1000000.0;
     std::chrono::milliseconds listening_time(700);
     std::chrono::milliseconds sleep_time(200);
@@ -113,10 +113,10 @@ int main(int argc, char** argv)
         try
         {
             double x = read_value(x_path);
-            double y = read_value(y_path);
-            double z = read_value(z_path);
+            // double y = read_value(y_path);
+            // double z = read_value(z_path);
 
-            //double magnitude = std::sqrt(x*x + y*y + z*z);
+            // double magnitude = std::sqrt(x*x + y*y + z*z);
             double magnitude = x > 0 ? x : -x;
             // double y_mag = y > 0 ? y : -y;
             // double magnitude = std::sqrt(y*y);
@@ -134,9 +134,12 @@ int main(int argc, char** argv)
             {
                 slapCounter++;
                 
-                int my_int = distr(gen);
-                std::string s = std::format("{:02}", my_int);
-                fs::path dir = "./audio/sexy/";
+                // int my_int = distr(gen);
+                // std::string s = std::format("{:02}", my_int);
+                std::string s = "yamete-kudasai-crop";
+                // std::string s = "yamete-kudasai-full";
+                // fs::path dir = "./audio/sexy/";
+                fs::path dir = "./audio/anime/";
                 fs::path fullPath = dir / s;
                 fullPath += ".mp3";
                 std::string finalPath = fullPath.string();

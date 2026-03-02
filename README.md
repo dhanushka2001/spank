@@ -2,7 +2,7 @@
 
 Slap your Linux laptop, it yells back.
 
-Inspired by **taigrr**'s [spank](https://github.com/taigrr/spank/) for the MacBook featured in this viral [tweet](https://x.com/jlxc2001/status/2027444452848243075?s=20). Switched from Go to C++ and for laptops on Linux instead of MacBooks.
+Inspired by **taigrr**'s [spank](https://github.com/taigrr/spank/) for MacBooks, featured in this viral [tweet](https://x.com/jlxc2001/status/2027444452848243075?s=20). Switched from Go to C++, and for Linux laptops instead of MacBooks.
 
 Uses the laptop's accelerometer via the Linux IIO (Industrial I/O) subsystem to detect physical hits on your laptop and plays audio responses using [miniaudio](https://miniaud.io/index.html).
 
@@ -51,7 +51,7 @@ These settings can be tuned in ``main.cpp``, in the future I may make these inpu
 
 ```cpp
 // tune these
-double threshold = 400.0;
+double threshold = 500.0;
 double upper_bound = 1000000.0;
 std::chrono::milliseconds listening_time(700);
 std::chrono::milliseconds sleep_time(200);
