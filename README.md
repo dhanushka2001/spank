@@ -33,6 +33,16 @@ And run:
 ./slap
 ```
 
+## Modes
+
+**Pain mode**: Randomly plays from 10 pain/protest audio clips when a slap is detected.
+
+**Sexy mode**: Randomly plays NSFW moaning sounds (not my idea don't sue me).
+
+**Halo mode**: Randomly plays from death sound effects from the Halo video game series when a slap is detected.
+
+**Anime mode**: _yamete-kudasai.mp3_
+
 ## Debugging
 
 Use this command to get list of IIO devices:
